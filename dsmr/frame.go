@@ -25,7 +25,7 @@ var (
 	// Regexp that matches most of the objects groups with 2 groups:
 	//  - OBIS Reduced ID-code eg `1-0:1.8.1`
 	//  - Value eg `(000084.276*kWh)`
-	objectRegexp = regexp.MustCompile("([0-9]+\\-[0-9]+\\:[0-9]+\\.[0-9]+\\.[0-9])\\((.*)\\)")
+	objectRegexp = regexp.MustCompile("([0-9]+-[0-9]+:[0-9]+.[0-9]+.[0-9]+)\\((.*)\\)")
 	// defaultValueRegexp extract value and unit with 2 groups:
 	//  - Value eg `000084.276`
 	//  - Unit (optional) eg `kWh`

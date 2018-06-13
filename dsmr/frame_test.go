@@ -45,6 +45,24 @@ func TestParseObject(t *testing.T) {
 	if d.Unit != want {
 		t.Errorf("unit does not match %q != %q", d.Unit, want)
 	}
+
+	//Double last OBIS digit
+	do = "0-0:96.7.21(00001)"
+	d, err = ParseObject(do)
+	if err != nil {
+		t.Error(err)
+	}
+	t.Logf("DO: %v", d)
+
+	want = "00001"
+	if d.Value != want {
+		t.Errorf("value does not match %q != %q", d.Value, want)
+	}
+
+	want = ""
+	if d.Unit != want {
+		t.Errorf("unit does not match %q != %q", d.Unit, want)
+	}
 }
 
 func TestParseFrame(t *testing.T) {
