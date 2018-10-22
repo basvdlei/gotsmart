@@ -6,6 +6,7 @@ package prometheus
 import (
 	"log"
 	"strconv"
+	"sync"
 
 	"github.com/basvdlei/gotsmart/dsmr"
 	"github.com/prometheus/client_golang/prometheus"
@@ -13,11 +14,14 @@ import (
 
 // DSMRCollector implements the Prometheus Collector interface.
 type DSMRCollector struct {
+	sync.Mutex
 	metrics []prometheus.Metric
 }
 
 // Collect implements part of the prometheus.Collector interface.
 func (dc *DSMRCollector) Collect(ch chan<- prometheus.Metric) {
+	dc.Lock()
+	defer dc.Unlock()
 	for _, m := range dc.metrics {
 		ch <- m
 	}
@@ -59,5 +63,7 @@ func (dc *DSMRCollector) Update(f dsmr.Frame) {
 			continue
 		}
 	}
+	dc.Lock()
+	defer dc.Unlock()
 	dc.metrics = metrics
 }
