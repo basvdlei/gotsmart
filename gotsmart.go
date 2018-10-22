@@ -35,13 +35,51 @@ func (f *frameupdate) Update(frame string) {
 	f.Time = time.Now()
 }
 
+func (f *frameupdate) Process(br *bufio.Reader, collector *dsmrprometheus.DSMRCollector) {
+	for {
+		if b, err := br.Peek(1); err == nil {
+			if string(b) != "/" {
+				fmt.Printf("Ignoring garbage character: %c\n", b)
+				br.ReadByte()
+				continue
+			}
+		} else {
+			continue
+		}
+		frame, err := br.ReadBytes('!')
+		if err != nil {
+			fmt.Printf("Error: %v\n", err)
+			continue
+		}
+		bcrc, err := br.ReadBytes('\n')
+		if err != nil {
+			fmt.Printf("Error: %v\n", err)
+			continue
+		}
+		// Check CRC
+		mcrc := strings.ToUpper(strings.TrimSpace(string(bcrc)))
+		crc := fmt.Sprintf("%04X", crc16.Checksum(frame))
+		if mcrc != crc {
+			fmt.Printf("CRC mismatch: %q != %q\n", mcrc, crc)
+			continue
+		}
+		f.Update(string(frame))
+		dsmrFrame, err := dsmr.ParseFrame(string(frame))
+		if err != nil {
+			log.Printf("could not parse frame: %v\n", err)
+			continue
+		}
+		collector.Update(dsmrFrame)
+	}
+}
+
 func main() {
 	var (
 		addrFlag   = flag.String("listen-address", ":8080", "The address to listen on for HTTP requests.")
 		deviceFlag = flag.String("device", "/dev/ttyAMA0", "Serial device to read P1 data from.")
 		baudFlag   = flag.Int("baud", 115200, "Baud rate (speed) to use.")
 		bitsFlag   = flag.Int("bits", 8, "Number of databits.")
-		parityFlag = flag.String("parity", "none", "Parity the use (none/odd/even/mark/space.)")
+		parityFlag = flag.String("parity", "none", "Parity the use (none/odd/even/mark/space).")
 	)
 	flag.Parse()
 
@@ -75,52 +113,10 @@ func main() {
 	}
 
 	br := bufio.NewReader(p)
-
 	collector := &dsmrprometheus.DSMRCollector{}
 	prometheus.MustRegister(collector)
-
 	f := &frameupdate{}
-	go func() {
-		for {
-			if b, err := br.Peek(1); err == nil {
-				if string(b) != "/" {
-					fmt.Printf("Ignoring garbage character: %c\n", b)
-					br.ReadByte()
-					continue
-				}
-			} else {
-				continue
-			}
-			frame, err := br.ReadBytes('!')
-			if err != nil {
-				fmt.Printf("Error: %v\n", err)
-				continue
-			}
-			bcrc, err := br.ReadBytes('\n')
-			if err != nil {
-				fmt.Printf("Error: %v\n", err)
-				continue
-			}
-
-			// Check CRC
-			mcrc := strings.ToUpper(strings.TrimSpace(string(bcrc)))
-			crc := fmt.Sprintf("%04X", crc16.Checksum(frame))
-			if mcrc != crc {
-				fmt.Printf("CRC mismatch: %q != %q", mcrc, crc)
-				continue
-			}
-
-			f.Update(string(frame))
-
-			dsmrFrame, err := dsmr.ParseFrame(string(frame))
-			if err != nil {
-				log.Printf("could not parse frame: %v\n", err)
-				continue
-			}
-
-			collector.Update(dsmrFrame)
-		}
-	}()
+	go f.Process(br, collector)
 
 	http.Handle("/metrics", promhttp.Handler())
 	http.Handle("/", f)
