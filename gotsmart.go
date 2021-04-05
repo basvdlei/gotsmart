@@ -9,11 +9,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/basvdlei/gotsmart/crc16"
-	"github.com/basvdlei/gotsmart/dsmr"
-	dsmrprometheus "github.com/basvdlei/gotsmart/dsmr/prometheus"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/robbertnoordzij/gotsmart/crc16"
+	"github.com/robbertnoordzij/gotsmart/dsmr"
+	dsmrprometheus "github.com/robbertnoordzij/gotsmart/dsmr/prometheus"
 	"github.com/tarm/serial"
 )
 

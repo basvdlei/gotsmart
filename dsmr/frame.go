@@ -25,11 +25,11 @@ var (
 	// Regexp that matches most of the objects groups with 2 groups:
 	//  - OBIS Reduced ID-code eg `1-0:1.8.1`
 	//  - Value eg `(000084.276*kWh)`
-	objectRegexp = regexp.MustCompile("([0-9]+-[0-9]+:[0-9]+.[0-9]+.[0-9]+)\\((.*)\\)")
+	objectRegexp = regexp.MustCompile("([0-9]+-[0-9]+:[0-9]+\\.[0-9]+\\.[0-9]+)(?:\\(([^(]*)\\))+")
 	// defaultValueRegexp extract value and unit with 2 groups:
 	//  - Value eg `000084.276`
 	//  - Unit (optional) eg `kWh`
-	defaultValueRegexp = regexp.MustCompile("([^*]+)\\*?(.*)")
+	defaultValueRegexp = regexp.MustCompile("([^*]*)\\*(.*)")
 )
 
 // Frame represents a DSMR4 frame as send from a P1 port.
@@ -108,6 +108,7 @@ func ParseFrame(frame string) (f Frame, err error) {
 // ParseObject returns a object for a given line in a frame.
 func ParseObject(line string) (DataObject, error) {
 	m := objectRegexp.FindStringSubmatch(strings.TrimSpace(line))
+
 	if m == nil || len(m) < 3 {
 		return DataObject{}, fmt.Errorf("no object found in string")
 	}
@@ -116,6 +117,7 @@ func ParseObject(line string) (DataObject, error) {
 	rawValue := m[2]
 
 	m = defaultValueRegexp.FindStringSubmatch(rawValue)
+
 	if m == nil {
 		return DataObject{
 			ID:    id,

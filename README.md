@@ -4,13 +4,15 @@ GotSmart
 GotSmart collects information from the Dutch SlimmeMeter (translated as Smart
 Meter) and exports them as Prometheus metrics.
 
+Originally forked from: https://github.com/basvdlei/gotsmart
+
 Setup
 -----
 
 ### Build
 
 ```sh
-go get github.com/basvdlei/gotsmart
+go get github.com/robbertnoordzij/gotsmart
 ```
 
 ### Run

@@ -397,6 +397,20 @@ var metricBuilders = map[string]MetricBuilder{
 
 	// TODO The types below are Smart Meter extensions like Gas meter, etc.
 
+	// Last hourly value (temperature converted), gas delivered to client in m3,
+	// including decimal values 0-1:24.2.1
+	// Value 2 Register F8(2,2)/F8(3,3), tag 18 (See note 2) m3
+	"0-1:24.2.1": MetricBuilder{
+		ValueType: prometheus.CounterValue,
+		Desc: prometheus.NewDesc(
+			namespace+"_gas_delivered_to_client_m3",
+			"meter reading gas delivered to client in m3",
+			defaultLabels,
+			prometheus.Labels{},
+		),
+		Unit: "m3",
+	},
+
 	// Device-Type  0-n:24.1.0.255  9 Device type 72 M-Bus client F3(0,0), tag 17
 
 	// Equipment identifier (Gas) 0-n:96.1.0.255  2 Value 1 Data Sn
