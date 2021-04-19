@@ -1,4 +1,4 @@
-FROM golang:1.11-alpine as builder
+FROM golang:1.13-alpine as builder
 RUN apk update && apk add git
 COPY . /go/src/github.com/basvdlei/gotsmart
 WORKDIR /go/src/github.com/basvdlei/gotsmart
