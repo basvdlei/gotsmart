@@ -44,3 +44,13 @@ Usage
 
 By default gotsmart listens on port 8080 and exposes the metrics under
 `/metrics`.
+
+
+Build for Raspberry Pi
+----------------------
+
+GotSmart also runs on a Raspberry Pi. To cross compile:
+
+```
+GOARCH=arm go build
+```
