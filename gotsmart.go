@@ -17,7 +17,7 @@ import (
 	"github.com/tarm/serial"
 )
 
-const VERSION = "0.0.2"
+const VERSION = "0.0.3"
 
 type frameupdate struct {
 	Frame string
