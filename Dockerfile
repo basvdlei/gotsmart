@@ -1,14 +1,12 @@
-FROM golang:1.13-alpine as builder
-RUN apk update && apk add git
-COPY . /go/src/github.com/basvdlei/gotsmart
+FROM golang:1.16-alpine as builder
 WORKDIR /go/src/github.com/basvdlei/gotsmart
+COPY . .
 ENV CGO_ENABLED 0
-RUN go get ./...
 RUN go vet ./... && \
     go test ./... && \
     go build
 
-FROM alpine:3.8
+FROM alpine:3.13
 COPY --from=builder /go/src/github.com/basvdlei/gotsmart/gotsmart \
 	/usr/local/bin/gotsmart
 EXPOSE 8080
