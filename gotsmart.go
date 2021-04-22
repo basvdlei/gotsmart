@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/basvdlei/gotsmart/crc16"
@@ -20,17 +21,22 @@ import (
 const version = "0.0.3"
 
 type frameupdate struct {
+	mutex sync.Mutex
 	Frame string
 	Time  time.Time
 }
 
 func (f *frameupdate) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	f.mutex.Lock()
+	defer f.mutex.Unlock()
 	w.Header().Add("Content-Type", "text/plain; charset=utf-8")
 	w.Header().Add("Last-Modified", f.Time.Format(http.TimeFormat))
 	w.Write([]byte(f.Frame))
 }
 
 func (f *frameupdate) Update(frame string) {
+	f.mutex.Lock()
+	defer f.mutex.Unlock()
 	f.Frame = strings.Replace(frame, "\r", "", -1)
 	f.Time = time.Now()
 }
@@ -115,7 +121,7 @@ func main() {
 	br := bufio.NewReader(p)
 	collector := &dsmrprometheus.DSMRCollector{}
 	prometheus.MustRegister(collector)
-	f := &frameupdate{}
+	f := &frameupdate{mutex: sync.Mutex{}}
 	go f.Process(br, collector)
 
 	http.Handle("/metrics", promhttp.Handler())
