@@ -124,7 +124,14 @@ func main() {
 	f := &frameupdate{mutex: sync.Mutex{}}
 	go f.Process(br, collector)
 
-	http.Handle("/metrics", promhttp.Handler())
-	http.Handle("/", f)
-	http.ListenAndServe(*addrFlag, nil)
+	mux := http.NewServeMux()
+	mux.Handle("/metrics", promhttp.Handler())
+	mux.Handle("/", f)
+	srv := &http.Server{
+		Addr:         *addrFlag,
+		Handler:      mux,
+		ReadTimeout:  30 * time.Second,
+		WriteTimeout: 30 * time.Second,
+	}
+	log.Fatal(srv.ListenAndServe())
 }
