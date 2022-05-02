@@ -322,6 +322,42 @@ var metricBuilders = map[string]MetricBuilder{
 		),
 		Unit: "A",
 	},
+	// Instantaneous voltage L1 in A resolution.  1-0:31.7.0.255  2 Value 3
+	// Register F3(0,0), tag 18  A
+	"1-0:32.7.0": MetricBuilder{
+		ValueType: prometheus.GaugeValue,
+		Desc: prometheus.NewDesc(
+			namespace+"_voltage_l1_a",
+			"instantaneous voltage l1 in a resolution",
+			defaultLabels,
+			prometheus.Labels{},
+		),
+		Unit: "V",
+	},
+	// Instantaneous voltage L2 in A resolution.  1-0:51.7.0.255  2 Value 3
+	// Register F3(0,0), tag 18  A
+	"1-0:52.7.0": MetricBuilder{
+		ValueType: prometheus.GaugeValue,
+		Desc: prometheus.NewDesc(
+			namespace+"_voltage_l2_a",
+			"instantaneous voltage l2 in a resolution",
+			defaultLabels,
+			prometheus.Labels{},
+		),
+		Unit: "V",
+	},
+	// Instantaneous voltage L3 in A resolution.  1-0:71.7.0.255  2 Value 3
+	// Register F3(0,0), tag 18  A
+	"1-0:72.7.0": MetricBuilder{
+		ValueType: prometheus.GaugeValue,
+		Desc: prometheus.NewDesc(
+			namespace+"_voltage_l3_a",
+			"instantaneous voltage l3 in a resolution",
+			defaultLabels,
+			prometheus.Labels{},
+		),
+		Unit: "V",
+	},
 	// Instantaneous active power L1 (+P) in W resolution 1-0:21.7.0.255  2
 	// Value 3 Register F5(3,3), tag 18  kW
 	"1-0:21.7.0": MetricBuilder{
@@ -393,6 +429,31 @@ var metricBuilders = map[string]MetricBuilder{
 			prometheus.Labels{},
 		),
 		Unit: "kW",
+	},
+
+	// Switch position Gas
+
+	"0-1:24.4.0": MetricBuilder{
+		ValueType: prometheus.UntypedValue,
+		Desc: prometheus.NewDesc(
+			namespace+"_gas_switch",
+			"gas switch",
+			defaultLabels,
+			prometheus.Labels{},
+		),
+	},
+
+	// Reading from natural gas meter (timestamp) (value)
+
+	"0-1:24.2.3": MetricBuilder{
+		ValueType: prometheus.CounterValue,
+		Desc: prometheus.NewDesc(
+			namespace+"_gas_m3",
+			"actual gas volume delivered",
+			defaultLabels,
+			prometheus.Labels{},
+		),
+		Unit: "m3",
 	},
 
 	// TODO The types below are Smart Meter extensions like Gas meter, etc.
