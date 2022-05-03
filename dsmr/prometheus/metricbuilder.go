@@ -322,41 +322,41 @@ var metricBuilders = map[string]MetricBuilder{
 		),
 		Unit: "A",
 	},
-	// Instantaneous current L1 in A resolution.  1-0:31.7.0.255  2 Value 3
-	// Register F3(0,0), tag 18  A
+	// Instantaneous voltage L1 in V resolution.  1-0:32.7.0.255  2 Value 3
+	// Register F4(1,1), tag 18  V
 	"1-0:32.7.0": MetricBuilder{
 		ValueType: prometheus.GaugeValue,
 		Desc: prometheus.NewDesc(
-			namespace+"_voltage_l1_a",
-			"instantaneous current l1 in a resolution",
+			namespace+"_voltage_l1_v",
+			"instantaneous voltage l1 in v resolution",
 			defaultLabels,
 			prometheus.Labels{},
 		),
-		Unit: "A",
+		Unit: "V",
 	},
-	// Instantaneous current L2 in A resolution.  1-0:51.7.0.255  2 Value 3
-	// Register F3(0,0), tag 18  A
+	// Instantaneous voltage L2 in V resolution.  1-0:52.7.0.255  2 Value 3
+	// Register F4(1,1), tag 18  V
 	"1-0:52.7.0": MetricBuilder{
 		ValueType: prometheus.GaugeValue,
 		Desc: prometheus.NewDesc(
-			namespace+"_voltage_l2_a",
-			"instantaneous current l2 in a resolution",
+			namespace+"_voltage_l2_v",
+			"instantaneous voltage l2 in v resolution",
 			defaultLabels,
 			prometheus.Labels{},
 		),
-		Unit: "A",
+		Unit: "V",
 	},
-	// Instantaneous current L3 in A resolution.  1-0:71.7.0.255  2 Value 3
-	// Register F3(0,0), tag 18  A
+	// Instantaneous voltage L3 in V resolution.  1-0:72.7.0.255  2 Value 3
+	// Register F4(1,1), tag 18  V
 	"1-0:72.7.0": MetricBuilder{
 		ValueType: prometheus.GaugeValue,
 		Desc: prometheus.NewDesc(
-			namespace+"_voltage_l3_a",
-			"instantaneous current l3 in a resolution",
+			namespace+"_voltage_l3_v",
+			"instantaneous voltage l3 in v resolution",
 			defaultLabels,
 			prometheus.Labels{},
 		),
-		Unit: "A",
+		Unit: "V",
 	},
 	// Instantaneous active power L1 (+P) in W resolution 1-0:21.7.0.255  2
 	// Value 3 Register F5(3,3), tag 18  kW
