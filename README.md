@@ -1,8 +1,8 @@
 GotSmart
 ========
 
-GotSmart collects information from the Dutch SlimmeMeter (translated as Smart
-Meter) and exports them as Prometheus metrics.
+GotSmart collects data from the Dutch SlimmeMeter (translates as Smart Meter)
+to export as Prometheus metrics.
 
 Setup
 -----
@@ -10,7 +10,7 @@ Setup
 ### Build
 
 ```sh
-go get github.com/basvdlei/gotsmart
+go install github.com/basvdlei/gotsmart
 ```
 
 ### Run
@@ -42,14 +42,13 @@ docker run -d -p 8080:8080 --device /dev/ttyS0:/dev/ttyS0 gotsmart
 Usage
 -----
 
-By default gotsmart listens on port 8080 and exposes the metrics under
-`/metrics`.
+By default gotsmart listens on port 8080 and exposes the metrics on `/metrics`.
 
 
 Build for Raspberry Pi
 ----------------------
 
-GotSmart also runs on a Raspberry Pi. To cross compile:
+GotSmart can run on Raspberry Pi. To cross compile use:
 
 ```
 GOARCH=arm go build
